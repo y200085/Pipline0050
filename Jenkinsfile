@@ -89,9 +89,9 @@ pipeline {
         }
     }
 
-    post {
+   post {
         always {
-            cleanWs()
+            deleteDir() // Replaces cleanWs() using built-in pipeline commands
             echo 'Pipeline execution finished.'
         }
         success {
