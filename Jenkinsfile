@@ -43,7 +43,8 @@ pipeline {
         stage('Load External Deployment Script') {
             steps {
                 script {
-                    env.DEPLOY_HELPER = load 'scripts/deploy-helper.groovy'
+                    // Loaded as a local workflow variable (prevents String casting errors)
+                    deployHelper = load 'scripts/deploy-helper.groovy'
                 }
             }
         }
@@ -55,7 +56,7 @@ pipeline {
             steps {
                 unstash 'compiled-artifact'
                 script {
-                    env.DEPLOY_HELPER.deployToEnvironment('Development', env.DEV_PATH)
+                    deployHelper.deployToEnvironment('Development', env.DEV_PATH)
                 }
             }
         }
@@ -69,7 +70,7 @@ pipeline {
                     steps {
                         timeout(time: 5, unit: 'DAYS') {
                             input(
-                                message: "Approve deployment of version to PRODUCTION on branch ${env.BRANCH_NAME}?",
+                                message: "Approve deployment to PRODUCTION on branch ${env.BRANCH_NAME}?",
                                 ok: 'Approve & Deploy',
                                 submitter: 'admin,release-manager'
                             )
@@ -80,7 +81,7 @@ pipeline {
                     steps {
                         unstash 'compiled-artifact'
                         script {
-                            env.DEPLOY_HELPER.deployToEnvironment('Production', env.PROD_PATH)
+                            deployHelper.deployToEnvironment('Production', env.PROD_PATH)
                         }
                     }
                 }
