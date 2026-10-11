@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     environment {
-        DEV_PATH = '/var/app/dev'
-        PROD_PATH = '/var/app/prod'
+        DEV_PATH = '/var/jenkins_home/app/dev'
+        PROD_PATH = '/var/jenkins_home/app/prod'
         DB_HOST = 'mysql-server'
     }
 
